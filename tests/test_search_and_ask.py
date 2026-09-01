@@ -1,8 +1,4 @@
-from fastapi.testclient import TestClient
-
-from app.main import app
-
-client = TestClient(app)
+from tests.test_health import client
 
 
 def test_search_returns_mocked_results(monkeypatch) -> None:

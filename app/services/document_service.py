@@ -116,6 +116,12 @@ def search_documents(query: str) -> dict[str, list[dict[str, str | int | float]]
 
 def ask_documents(question: str) -> dict[str, str | list[dict[str, str | int | float]]]:
     results = _retrieve_document_chunks(question)
+    if not results:
+        return {
+            "answer": "The answer cannot be found in the documents.",
+            "sources": [],
+        }
+
     answer = generate_answer(build_rag_prompt(question, results))
     return {
         "answer": answer,

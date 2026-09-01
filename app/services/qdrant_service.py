@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 from qdrant_client import QdrantClient, models
 from qdrant_client.http.exceptions import ResponseHandlingException, UnexpectedResponse
 
-from app.config import QDRANT_COLLECTION, QDRANT_URL
+from app.config import QDRANT_COLLECTION, QDRANT_SCORE_THRESHOLD, QDRANT_URL
 
 DOCUMENTS_COLLECTION = QDRANT_COLLECTION
 EMBEDDING_DIMENSION = 384
@@ -88,14 +88,19 @@ def store_document_chunks(
 def search_document_chunks(query_embedding: object) -> list[models.ScoredPoint]:
     try:
         client = QdrantClient(url=QDRANT_URL)
-        return client.query_points(
+        results = client.query_points(
             collection_name=DOCUMENTS_COLLECTION,
             query=[float(value) for value in query_embedding],
             limit=3,
             with_payload=True,
+            score_threshold=QDRANT_SCORE_THRESHOLD,
         ).points
     except (ResponseHandlingException, UnexpectedResponse) as error:
         _qdrant_unavailable(error)
+
+    return [
+        point for point in results if point.score >= QDRANT_SCORE_THRESHOLD
+    ]
 
 
 def delete_document_chunks(document_hash: str) -> None:
