@@ -46,12 +46,12 @@ A small FastAPI service that will provide the foundation for the AI Knowledge As
 
 The server is available at `http://127.0.0.1:8000`.
 
-## Local infrastructure
+## Run with Docker Compose
 
-Start PostgreSQL and Qdrant with Docker Compose:
+Build and start the API, PostgreSQL, and Qdrant services:
 
 ```powershell
-docker compose up -d
+docker compose up -d --build
 ```
 
 Check the running services:
@@ -60,7 +60,18 @@ Check the running services:
 docker compose ps
 ```
 
-Stop and remove the Compose containers:
+Follow the API logs:
+
+```powershell
+docker compose logs api
+```
+
+The API is available at `http://localhost:8000`. The API container connects to
+PostgreSQL and Qdrant through their Compose service names. Ollama continues to
+run on Windows and is reached from the container through
+`host.docker.internal:11434`.
+
+Stop and remove the Compose containers without deleting their external volumes:
 
 ```powershell
 docker compose down
