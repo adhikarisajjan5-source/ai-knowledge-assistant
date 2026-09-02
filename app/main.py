@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from fastapi import FastAPI, File, HTTPException, UploadFile, status
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import create_database_tables
 from app.schemas import AskRequest, SearchRequest
@@ -13,6 +14,13 @@ from app.services.document_service import (
 )
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["GET", "POST", "DELETE"],
+    allow_headers=["Content-Type"],
+)
 
 
 @app.on_event("startup")

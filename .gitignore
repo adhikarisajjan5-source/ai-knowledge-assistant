@@ -18,6 +18,7 @@ env/
 # Packaging and tool output
 build/
 dist/
+frontend/node_modules/
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
